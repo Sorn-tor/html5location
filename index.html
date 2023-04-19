@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        .center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-right: -50%;
+            transform: translate(-50%, -50%);
+        }
+        .container{
+            width: fit-content;
+            margin: auto;
+            box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+            align-items: center;
+            padding: 20px;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="center container">
+        <div id="location-info" style="display: none;">
+            <div>
+                At: 
+                <span id="timestamp">___</span>
+            </div>
+            <br>
+            <div>
+                Longitude: <span id="longitude">___</span>
+            </div>
+            <br>
+            <div>
+                Latitude: <span id="latitude">___</span>
+            </div> 
+            <br>
+            <a id="mapurl" href="">see yourself on the map.</a>  
+            <br>
+            <br>
+            <br>
+            <div style="font-size: 0.5rem; color: grey;">This website doesn't collet any information.</div>
+        </div>
+
+        <div id="sad" style="display: none; text-align: center;">
+            don't know your location<br>
+            <button onClick="window.location.reload();" style="margin:10px; padding: 10px;">Refresh Page</button>
+        </div>
+    </div>
+</body>
+
+<script>
+    if(navigator.geolocation){
+        console.log("working");
+        let location = 
+            navigator
+            .geolocation
+            .getCurrentPosition(showLocation, failToAccessLocation);
+        console.log(location);
+    }
+
+    function showLocation(pos){
+        console.log(pos);
+        let dateFormat = new Date(pos.timestamp);
+        let timestring = dateFormat.getDate()+
+           "/"+(dateFormat.getMonth()+1)+
+           "/"+dateFormat.getFullYear()+
+           " "+dateFormat.getHours()+
+           ":"+dateFormat.getMinutes()+
+           ":"+dateFormat.getSeconds();
+        let latitude = pos.coords.latitude;
+        let longitude = pos.coords.longitude;
+        let mapURL = "https://maps.google.com/?q="+latitude+","+longitude+""
+        $("#timestamp").text(timestring);
+        $("#longitude").text(longitude);
+        $("#latitude").text(latitude);
+        $("#mapurl").attr("href", mapURL);
+        $("#location-info").show();
+
+    }
+
+    function failToAccessLocation(err){
+        console.log(err);
+        $("#sad").show();
+    }
+</script>
+</html>
